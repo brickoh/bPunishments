@@ -1,0 +1,5 @@
+name: bPunishments
+version: '${project.version}'
+main: me.ethan.bpunishments.bPunishments
+api-version: 1.17
+authors: [ brickoh ]
