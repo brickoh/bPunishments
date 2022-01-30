@@ -1,0 +1,18 @@
+staff:
+  punishment-sent: "&6[Punishments] &f{offender} &7has been &f{punishment} &7by &f{staff}&7! &7&o[Silent]"
+  punishment-join-attempt: "&6[Punishments] &f{offender} &7has attempted to log on but is &f{punishment}&7!"
+  punishment-revoked: "&6[Punishments] &f{offender} &7has been &f{punishment} &7by &f{staff}&7! &7&o[Silent]"
+
+global:
+  punishment-sent: "&8&m---------------------\n&f{offender} &7has been &f{punishment} &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
+  punishment-revoked: "&8&m---------------------\n&f{offender} &7has been &f{punishment} &7by &f{staff}&7!\n&8&m---------------------"
+
+
+history-menu:
+  title: "&7You are viewing &f{profile}'s &7history!"
+
+
+kick:
+  ban: "&cYour account has been suspended from the &7Test Network&c!\n&cThis punishment will expire in &7{expire}&c!"
+  kick: ""
+  blacklist: ""
