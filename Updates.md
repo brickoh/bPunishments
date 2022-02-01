@@ -1,4 +1,4 @@
-##Updates 
+## Updates 
 Most if not all updates will be logged here.
 
 + TempBanCommand
