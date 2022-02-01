@@ -9,6 +9,8 @@ public enum PunishmentType {
     WARN,
 
     UNBAN,
+    UNMUTE,
+    UNBLACKLIST,
 
     TEMP_BAN,
     TEMP_MUTE

@@ -1,18 +1,83 @@
 staff:
-  punishment-sent: "&6[Punishments] &f{offender} &7has been &f{punishment} &7by &f{staff}&7! &7&o[Silent]"
-  punishment-join-attempt: "&6[Punishments] &f{offender} &7has attempted to log on but is &f{punishment}&7!"
-  punishment-revoked: "&6[Punishments] &f{offender} &7has been &f{punishment} &7by &f{staff}&7! &7&o[Silent]"
+  punishment-sent:
+    ban: "&6[Punishments] &f{offender} &7has been &fbanned &7by &f{staff}&7! &7&o[Silent]"
+    temp-ban: "&6[Punishments] &f{offender} &7has been &ftemp banned &7by &f{staff}&7! &7&o[Silent]"
+    warn: "&6[Punishments] &f{offender} &7has been &fwarned &7by &f{staff}&7! &7&o[Silent]"
+    mute: "&6[Punishments] &f{offender} &7has been &fmuted &7by &f{staff}&7! &7&o[Silent]"
+    temp-mute: "&6[Punishments] &f{offender} &7has been &ftemp muted &7by &f{staff}&7! &7&o[Silent]"
+    kick: "&6[Punishments] &f{offender} &7has been &fkicked &7by &f{staff}&7! &7&o[Silent]"
+    blacklist: "&6[Punishments] &f{offender} &7has been &fblacklisted &7by &f{staff}&7! &7&o[Silent]"
+
+  punishment-join-attempt:
+    ban:  "&6[Punishments] &f{offender} &7has attempted to log on but is &fbanned&7!"
+    blacklist:  "&6[Punishments] &f{offender} &7has attempted to log on but is &fblacklisted&7!"
+  punishment-talk-attempt: "&6[Punishments] &f{offender} &7has attempted to talk is &fmuted&7!"
+  punishment-revoked:
+    ban: "&6[Punishments] &f{offender} &7has been &funbanned &7by &f{staff}&7! &7&o[Silent]"
+    warn: "&6[Punishments] &f{staff} &7has removed a &fwarning &7for &f{offender}&7! &7&o[Silent]"
+    mute: "&6[Punishments] &f{offender} &7has been &funmuted &7by &f{staff}&7! &7&o[Silent]"
+    blacklist: "&6[Punishments] &f{offender} &7has been &funblacklisted &7by &f{staff}&7! &7&o[Silent]"
 
 global:
-  punishment-sent: "&8&m---------------------\n&f{offender} &7has been &f{punishment} &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
-  punishment-revoked: "&8&m---------------------\n&f{offender} &7has been &f{punishment} &7by &f{staff}&7!\n&8&m---------------------"
+  punishment-sent:
+    ban: "&8&m---------------------\n&f{offender} &7has been &fbanned &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
+    temp-ban: "&8&m---------------------\n&f{offender} &7has been &ftemp banned &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
+    warn: "&8&m---------------------\n&f{offender} &7has been &fwarned &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
+    mute: "&8&m---------------------\n&f{offender} &7has been &fmuted &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
+    temp-mute: "&8&m---------------------\n&f{offender} &7has been &ftemp muted &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
+    blacklist: "&8&m---------------------\n&f{offender} &7has been &fblacklisted &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
+  punishment-revoked:
+    ban: "&8&m---------------------\n&f{offender} &7has been &funbanned &7by &f{staff}&7!\n&8&m---------------------"
+    warn: "&8&m---------------------\n&f{staff} &7has remove a &fwarning &7for &f{offender}&7!\n&8&m---------------------"
+    mute: "&8&m---------------------\n&f{offender} &7has been &funmuted &7by &f{staff}&7!\n&8&m---------------------"
+    blacklist: "&8&m---------------------\n&f{offender} &7has been &funblacklisted &7by &f{staff}&7!\n&8&m---------------------"
 
 
-history-menu:
-  title: "&7You are viewing &f{profile}'s &7history!"
-
-
+menus:
+  history:
+    title: "&f{profile}'s &7history!"
+    bans:
+      item:
+        material: "RED_WOOL"
+        name: "&e&lBans"
+        lore:
+          - "&8&m---------------------------"
+          - "&7{bans} ban(s) on record!"
+          - "&8&m---------------------------"
+    warns:
+      item:
+        material: "BLUE_WOOL"
+        name: "&e&lWarns"
+        lore:
+          - "&8&m---------------------------"
+          - "&7{mutes} mute(s) on record!"
+          - "&8&m---------------------------"
+    mutes:
+      item:
+        material: "ORANGE_WOOL"
+        name: "&e&lMutes"
+        lore:
+          - "&8&m---------------------------"
+          - "&7{mutes} mute(s) on record!"
+          - "&8&m---------------------------"
+    kicks:
+      item:
+        material: "GRAY_WOOL"
+        name: "&e&lKicks"
+        lore:
+          - "&8&m---------------------------"
+          - "&7{kicks} kick(s) on record!"
+          - "&8&m---------------------------"
+    blacklists:
+      item:
+        material: "BLACK_WOOL"
+        name: "&e&lBlacklists"
+        lore:
+          - "&8&m---------------------------"
+          - "&7{blacklists} blacklist(s) on record!"
+          - "&8&m---------------------------"
 kick:
-  ban: "&cYour account has been suspended from the &7Test Network&c!\n&cThis punishment will expire in &7{expire}&c!"
-  kick: ""
-  blacklist: ""
+  ban: "&cYour account has been suspended from the &7Test Network&c!\n&cThis punishment will expire &7&nNEVER&r&c!"
+  temp-ban: "&cYour account has been suspended from the &7Test Network&c!\n&cThis punishment will expire in &7{expire}&c!"
+  blacklist: "&cYour account has been blacklisted from the &7Test Network&c!\n&cThis punishment will expire in &7&nNEVER&r&c!"
+  kick: "&cYou have been kicked!"

@@ -11,12 +11,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author brickoh
- * @since 11/10/2021
- * project Yuki-Plugin
- * GitHub https://github.com/brickoh
- */
 public class ChatUtils {
 
     public static String format(String message) {

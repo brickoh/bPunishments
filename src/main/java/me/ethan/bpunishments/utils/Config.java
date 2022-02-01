@@ -9,12 +9,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * @author brickoh
- * @since 11/10/2021
- * project Yuki-Utils
- * GitHub https://github.com/brickoh
- */
 @Setter @Getter
 public class Config extends YamlConfiguration {
 

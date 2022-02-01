@@ -1,6 +1,7 @@
 package me.ethan.bpunishments.profile;
 
 import com.mongodb.client.model.Filters;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.ethan.bpunishments.bPunishments;
@@ -14,19 +15,15 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Getter @Setter
+@Data
 public class Profile {
 
     private final bPunishments plugin = bPunishments.getInstance();
     @Getter private static Map<UUID, Profile> profiles = new ConcurrentHashMap<>();
     private final UUID uuid;
     private String ip = "Unknown";
-    private List<Punishment> bans;
-    private List<Punishment> mutes;
-    private List<Punishment> warns;
-    private List<Punishment> kicks;
-    private List<Punishment> blacklists;
-    private List<UUID> alts;
+    private ArrayList<UUID> alts;
+    private ArrayList<Punishment> bans = new ArrayList<>(),  kicks = new ArrayList<>(), mutes = new ArrayList<>(), warns = new ArrayList<>(), blacklists = new ArrayList<>();
     private boolean banned, muted, blacklisted;
 
 
@@ -46,12 +43,6 @@ public class Profile {
     private void create() {
         Document document = new Document("uuid", uuid.toString());
         document.append("ip", ip);
-        document.append("blacklists", new ArrayList<>());
-        document.append("bans", new ArrayList<>());
-        document.append("kicks", new ArrayList<>());
-        document.append("mutes", new ArrayList<>());
-        document.append("warns", new ArrayList<>());
-        document.append("alts", new ArrayList<>());
         document.append("banned", banned);
         document.append("blacklisted", blacklisted);
         document.append("muted", muted);
@@ -64,11 +55,6 @@ public class Profile {
         Document document = plugin.getMongoManager().getProfiles().find(Filters.eq("uuid", uuid.toString())).first();
         if (document != null) {
             this.ip = document.getString("ip");
-            this.blacklists = document.get("blacklists", ArrayList.class);
-            this.bans = document.get("bans", ArrayList.class);
-            this.mutes = document.get("mutes", ArrayList.class);
-            this.warns = document.get("warns", ArrayList.class);
-            this.kicks = document.get("kicks", ArrayList.class);
             this.alts = document.get("alts", ArrayList.class);
             this.muted = document.getBoolean("muted");
             this.banned = document.getBoolean("banned");
@@ -82,7 +68,7 @@ public class Profile {
     private void loadPunishments() {
         for (Document document : plugin.getMongoManager().getPunishments().find(Filters.eq("offender", uuid.toString()))) {
             UUID offender = UUID.fromString(document.getString("offender"));
-            UUID executor = UUID.fromString(document.getString("executor"));
+            String executor = document.getString("executor");
             Punishment punishment = new Punishment(
                     document.getInteger("id"),
                     offender,
@@ -92,24 +78,24 @@ public class Profile {
                     document.getLong("duration"),
                     document.getBoolean("silent"),
                     document.getBoolean("active"));
-            Punishment.getPunishments().put(punishment.getId(), punishment);
-            System.out.println("[PUNISHMENT] " + punishment.getId() + " has been loaded");
+
+            switch (punishment.getPunishmentType()) {
+                case TEMP_BAN, BAN -> bans.add(punishment);
+                case TEMP_MUTE, MUTE -> mutes.add(punishment);
+                case BLACKLIST -> blacklists.add(punishment);
+                case WARN -> warns.add(punishment);
+                case KICK -> kicks.add(punishment);
+            }
+            Punishment.getPunishments().put(uuid, punishment);
         }
     }
 
     public void save() {
         Document document = new Document("uuid", uuid.toString());
         document.append("ip", ip);
-        document.append("blacklists", new ArrayList<>());
-        document.append("bans", new ArrayList<>());
-        document.append("kicks", new ArrayList<>());
-        document.append("mutes", new ArrayList<>());
-        document.append("warns", new ArrayList<>());
-        document.append("alts", new ArrayList<>());
         document.append("banned", banned);
         document.append("blacklisted", blacklisted);
         document.append("muted", muted);
-
         Document document1 = plugin.getMongoManager().getProfiles().find(Filters.eq("uuid", uuid.toString())).first();
         if (document1 == null) return;
         plugin.getMongoManager().getProfiles().replaceOne(document1, document);

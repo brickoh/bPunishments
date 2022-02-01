@@ -1,4 +1,4 @@
-package me.ethan.bpunishments.commands.impl;
+package me.ethan.bpunishments.commands.impl.ban;
 
 import me.ethan.bpunishments.feedback.Feedback;
 import me.ethan.bpunishments.profile.Profile;
@@ -14,6 +14,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class BanCommand implements CommandExecutor {
@@ -33,6 +34,7 @@ public class BanCommand implements CommandExecutor {
                         OfflinePlayer target = Bukkit.getOfflinePlayer(uuid);
                         Profile targetP = new Profile(target.getUniqueId());
                         boolean silent = false;
+
                         StringBuilder sb = new StringBuilder();
                         for (int i = 1; i < args.length; i++) {
                             sb.append(args[i]).append(" ");
@@ -42,22 +44,20 @@ public class BanCommand implements CommandExecutor {
                         if (reason.contains("-s")) {
                             reason = reason.replace("-s", "");
                             silent = true;
-                            player.sendMessage(ChatUtils.format(Feedback.STAFF_PUNISHMENT_SENT)
+                            player.sendMessage(ChatUtils.format(Feedback.STAFF_PUNISHMENT_SENT_BAN)
                                     .replace("{offender}", args[0])
-                                    .replace("{punishment}", "banned")
                                     .replace("{staff}", player.getName()));
                         } else {
-                            player.sendMessage(ChatUtils.format(Feedback.GLOBAL_PUNISHMENT_SENT)
+                            player.sendMessage(ChatUtils.format(Feedback.GLOBAL_PUNISHMENT_SENT_BAN)
                                     .replace("{offender}", args[0])
-                                    .replace("{punishment}", "banned")
                                     .replace("{staff}", player.getName())
-                                    .replace("{duration}", "10L"));
+                                    .replace("{duration}", "permanent"));
                         }
 
                         if (target.isOnline()) {
                             target.getPlayer().kickPlayer(ChatUtils.format(Feedback.KICK_BAN));
                         }
-                        Punishment punishment = new Punishment(Punishment.getNewID(), targetP.getUuid(), player.getUniqueId(),
+                        Punishment punishment = new Punishment(Punishment.getNewID(), targetP.getUuid(), player.getUniqueId().toString(),
                                 PunishmentType.BAN, reason, 10L, silent, true);
                         punishment.createPunishment();
                         targetP.setBanned(true);
