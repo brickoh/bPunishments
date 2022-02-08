@@ -7,6 +7,8 @@ import me.ethan.bpunishments.profile.Profile;
 import me.ethan.bpunishments.utils.ChatUtils;
 import me.ethan.bpunishments.utils.menu.Button;
 import me.ethan.bpunishments.utils.menu.Menu;
+import me.ethan.bpunishments.utils.name.NameFetcher;
+import me.ethan.bpunishments.utils.name.NameUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -30,8 +32,8 @@ public class HistoryMenu extends Menu {
 
     @Override
     public String getTitle(Player player) {
-        OfflinePlayer off = Bukkit.getOfflinePlayer(profile.getUuid());
-        return ChatUtils.format(Feedback.MENU_HISTORY_TITLE).replace("{profile}", off.getPlayer().getName());
+        String name = NameUtils.getName(profile.getUuid());
+        return ChatUtils.format(Feedback.MENU_HISTORY_TITLE).replace("{profile}", name);
     }
 
     @Override

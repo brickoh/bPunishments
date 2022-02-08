@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import java.util.Date;
 import java.util.UUID;
 
-public class ProfileListener implements Listener {
+public class ProfileListeners implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPreJoin(AsyncPlayerPreLoginEvent event) {
@@ -38,7 +38,7 @@ public class ProfileListener implements Listener {
                     punishment.updatePunishment();
                 } else {
                     event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_BANNED, ChatUtils.format(Feedback.KICK_TEMP_BAN)
-                            .replace("{expire}", TimeUtils.getExpiration(punishment.getDuration())));
+                            .replace("{expire}", punishment.getTimeLeft()));
                 }
             }
         }

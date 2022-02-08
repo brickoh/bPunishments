@@ -52,12 +52,12 @@ public class MuteMenu extends PageMenu {
                     public ItemStack getItem(Player player) {
                         ItemStack active = new ItemStack(Material.RED_WOOL);
                         ItemMeta meta = active.getItemMeta();
-                        meta.setDisplayName(ChatUtils.format("&e&l" + TimeUtils.getExpiration(ban.getExecutedDate())));
+                        meta.setDisplayName(ChatUtils.format("&e&l" + ban.getAddedAtFormatted()));
                         ArrayList<String> lore = new ArrayList<>();
                         lore.add("&7&m------------------------------");
                         lore.add("&cBy: &e" + (ban.getExecutor().equals("CONSOLE") ? "CONSOLE" : NameUtils.getName(UUID.fromString(ban.getExecutor()))) );
                         lore.add("&cReason: &e" + ban.getReason().replace("-s", ""));
-                        lore.add("&cDuration: &e1 hours, 0 minutes, 0 seconds");
+                        lore.add("&cDuration: &e" + ban.getTimeLeft());
                         lore.add("&cSilent: &e" + ban.isSilent());
                         lore.add("&7&m------------------------------");
                         meta.setLore(ChatUtils.format(lore));
@@ -71,17 +71,21 @@ public class MuteMenu extends PageMenu {
                     public ItemStack getItem(Player player) {
                         ItemStack inactive = new ItemStack(Material.GREEN_WOOL);
                         ItemMeta meta = inactive.getItemMeta();
-                        meta.setDisplayName(ChatUtils.format("&e&l" + TimeUtils.getExpiration(ban.getExecutedDate())));
+                        meta.setDisplayName(ChatUtils.format("&e&l" + ban.getAddedAtFormatted()));
                         ArrayList<String> lore = new ArrayList<>();
                         lore.add("&7&m------------------------------");
                         lore.add("&cBy: &e" + (ban.getExecutor().equals("CONSOLE") ? "CONSOLE" : NameUtils.getName(UUID.fromString(ban.getExecutor()))) );
                         lore.add("&cReason: &e" + ban.getReason().replace("-s", ""));
-                        lore.add("&cDuration: &e1 hours, 0 minutes, 0 seconds");
+                        lore.add("&cDuration: &e" + ban.getTimeLeft());
                         lore.add("&cSilent: &e" + ban.isSilent());
                         lore.add("&7&m------------------------------");
                         lore.add("&cRemoved By: &e" + (ban.getExecutor().equals("CONSOLE") ? "CONSOLE" : NameUtils.getName(UUID.fromString(ban.getExecutor()))) );
-                        lore.add("&cRemoval Reason: &e" + ban.getReason().replace("-s", ""));
-                        lore.add("&cRemoval Date: &e" + TimeUtils.getExpiration(ban.getRemovedAtDate()));
+                        if(ban.getRemoveReason() == null) {
+                            lore.add("&cRemoval Reason: &eUndefined");
+                        } else {
+                            lore.add("&cRemoval Reason: &e" + ban.getRemoveReason().replace("-s", ""));
+                        }
+                        lore.add("&cRemoval Date: &e" + ban.getRemovedAtFormatted());
                         lore.add("&7&m------------------------------");
                         meta.setLore(ChatUtils.format(lore));
                         inactive.setItemMeta(meta);

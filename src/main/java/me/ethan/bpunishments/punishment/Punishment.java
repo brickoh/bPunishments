@@ -7,11 +7,10 @@ import lombok.Setter;
 import me.ethan.bpunishments.bPunishments;
 import me.ethan.bpunishments.profile.Profile;
 import me.ethan.bpunishments.punishment.impl.PunishmentType;
+import me.ethan.bpunishments.utils.TimeUtils;
 import org.bson.Document;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Data
@@ -23,9 +22,9 @@ public class Punishment {
     private final int id;
     private UUID offender;
     private PunishmentType punishmentType;
-    private String executor, reason;
+    private String executor, reason, removeReason;
     private long duration;
-    private long executedDate, removedAtDate;
+    private long executedAt, removedAt;
     private boolean silent, active;
 
     public Punishment(int id, UUID offender, String executor, PunishmentType punishmentType, String reason, long duration, boolean silent, boolean active) {
@@ -37,15 +36,17 @@ public class Punishment {
         this.duration = duration;
         this.silent = silent;
         this.active = active;
+        this.executedAt = System.currentTimeMillis();
         getPunishments().put(offender, this);
     }
 
-    public Punishment(int id, UUID offender, String executor, PunishmentType punishmentType, String reason) {
+    public Punishment(int id, UUID offender, String executor, PunishmentType punishmentType, String reason, boolean silent) {
         this.id = id;
         this.offender = offender;
         this.executor = executor;
         this.punishmentType = punishmentType;
         this.reason = reason;
+        this.silent = silent;
         getPunishments().put(offender, this);
     }
 
@@ -57,7 +58,10 @@ public class Punishment {
         document.append("reason", this.reason);
         document.append("duration", this.duration);
         document.append("active", this.active);
-        document.append("silent", this.active);
+        document.append("silent", this.silent);
+        document.append("executed_at", this.executedAt);
+        document.append("removed_at", null);
+        document.append("removed_reason", null);
         document.append("type", this.punishmentType.name());
         plugin.getMongoManager().getPunishments().insertOne(document);
     }
@@ -69,7 +73,10 @@ public class Punishment {
         document.append("reason", this.reason);
         document.append("duration", this.duration);
         document.append("active", this.active);
-        document.append("silent", this.active);
+        document.append("silent", this.silent);
+        document.append("executed_at", this.executedAt);
+        document.append("removed_at", this.removedAt);
+        document.append("removed_reason", this.removeReason);
         document.append("type", this.punishmentType.name());
 
         Document document1 = plugin.getMongoManager().getPunishments().find(Filters.eq("id", id)).first();
@@ -78,7 +85,32 @@ public class Punishment {
     }
 
 
+    public String getAddedAtFormatted() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(this.executedAt));
 
+        return calendar.getTime().toString();
+    }
+
+    public String getRemovedAtFormatted() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(this.removedAt));
+        return calendar.getTime().toString();
+    }
+
+    public String getTimeLeft() {
+        if (!(this.isActive())) {
+            return "Expired";
+        }
+
+        Calendar from = Calendar.getInstance();
+        from.setTime(new Date(System.currentTimeMillis()));
+
+        Calendar to = Calendar.getInstance();
+        to.setTime(new Date(this.executedAt + this.duration));
+
+        return TimeUtils.formatDateDiff(from, to);
+    }
 
     public static int getNewID() {
         int id = 0;

@@ -7,11 +7,6 @@ public enum PunishmentType {
     KICK,
     MUTE,
     WARN,
-
-    UNBAN,
-    UNMUTE,
-    UNBLACKLIST,
-
     TEMP_BAN,
     TEMP_MUTE
 

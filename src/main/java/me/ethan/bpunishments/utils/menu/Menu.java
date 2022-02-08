@@ -15,9 +15,7 @@ import java.util.Map;
 @Getter
 public abstract class Menu {
 
-
-    @Getter
-    private static Map<Player, Menu> openedMenus = new HashMap<>();
+    @Getter private static final Map<Player, Menu> openedMenus = new HashMap<>();
     private Map<Integer, Button> buttons = new HashMap<>();
 
     public abstract String getTitle(Player player);
@@ -112,6 +110,7 @@ public abstract class Menu {
         ItemStack itemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(" ");
+        itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
 

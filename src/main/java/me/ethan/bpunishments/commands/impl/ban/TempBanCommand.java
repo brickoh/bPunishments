@@ -1,79 +1,87 @@
 package me.ethan.bpunishments.commands.impl.ban;
 
+import com.google.gson.JsonObject;
+import me.ethan.bpunishments.bPunishments;
+import me.ethan.bpunishments.database.redis.impl.Payload;
 import me.ethan.bpunishments.feedback.Feedback;
 import me.ethan.bpunishments.profile.Profile;
 import me.ethan.bpunishments.punishment.Punishment;
 import me.ethan.bpunishments.punishment.impl.PunishmentType;
 import me.ethan.bpunishments.utils.ChatUtils;
 import me.ethan.bpunishments.utils.TimeUtils;
+import me.ethan.bpunishments.utils.command.CommandArgs;
+import me.ethan.bpunishments.utils.command.annotation.Command;
 import me.ethan.bpunishments.utils.uuid.UUIDUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
-public class TempBanCommand implements CommandExecutor {
+public class TempBanCommand {
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player player) {
-            if (player.hasPermission("punishments.commands.ban")) {
-                if (args.length == 0) {
-                    player.sendMessage(ChatColor.RED + "Usage: /tban <player> <time> <unit> <reason> [-s]");
-                }
+    @Command(name = "tban", aliases = {"tb", "tempban"}, permission = "bpunishments.commands.tempban")
+    public void execute(CommandArgs args) {
+        CommandSender sender = args.getSender();
 
-                UUID uuid = UUIDUtils.getUUID(args[0]);
-                if (uuid == null) {
-                    player.sendMessage(ChatColor.RED + "That player does not exist!");
-                } else {
-                    OfflinePlayer target = Bukkit.getOfflinePlayer(uuid);
-                    Profile targetP = new Profile(target.getUniqueId());
-                    boolean silent = false;
-                    String unit = args[2];
-                    int duration = Integer.parseInt(args[1]);
-
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 3; i < args.length; i++) {
-                        sb.append(args[i]).append(" ");
-                    }
-                    String reason = sb.toString().trim();
-
-
-                    if (reason.contains("-s")) {
-                        reason = reason.replace("-s", "");
-                        silent = true;
-                        player.sendMessage(ChatUtils.format(Feedback.STAFF_PUNISHMENT_SENT_TEMP_BAN)
-                                .replace("{offender}", args[0])
-                                .replace("{staff}", player.getName()));
-                    } else {
-
-                        player.sendMessage(ChatUtils.format(Feedback.GLOBAL_PUNISHMENT_SENT_TEMP_BAN)
-                                .replace("{offender}", args[0])
-                                .replace("{staff}", player.getName())
-                                .replace("{duration}", duration + " " + unit));
-                    }
-                    Punishment punishment = new Punishment(Punishment.getNewID(), targetP.getUuid(), player.getUniqueId().toString(),
-                            PunishmentType.TEMP_BAN, reason, System.currentTimeMillis() + TimeUtils.getTime(duration, unit), silent, true);
-                    punishment.createPunishment();
-                    targetP.setBanned(true);
-                    targetP.getBans().add(punishment);
-                    targetP.save();
-
-                    if (target.isOnline()) {
-                        target.getPlayer().kickPlayer(ChatUtils.format(Feedback.KICK_TEMP_BAN)
-                                .replace("{expire}", TimeUtils.getExpiration(punishment.getDuration())));
-                    }
-
-                    return true;
-                }
-            }
+        if (args.getArgs().length < 3) {
+            sender.sendMessage(ChatColor.RED + "/" + args.getLabel() + " <player> <time> <time-unit> <reason> [-s]");
+            return;
         }
-        return false;
+
+        UUID uuid = UUIDUtils.getUUID(args.getArgs(0));
+        if (uuid == null) {
+            sender.sendMessage(ChatColor.RED + "UUID came back null, is the IGN correct? (" + args.getArgs(0) + ")");
+            return;
+        }
+        OfflinePlayer target = Bukkit.getOfflinePlayer(uuid);
+        Profile profile = new Profile(target.getUniqueId());
+        int duration = Integer.parseInt(args.getArgs(1));
+        String unit = args.getArgs(2);
+        boolean silent = false;
+        String tf = null;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 3; i < args.getArgs().length; i++) {
+            sb.append(args.getArgs()[i]).append(" ");
+        }
+        String reason = sb.toString().trim();
+
+        if (reason.contains("-s")) {
+            reason = reason.replace("-s", "");
+            silent = true;
+        }
+        Punishment punishment;
+        if (sender instanceof ConsoleCommandSender) {
+            punishment = new Punishment(Punishment.getNewID(), profile.getUuid(), "CONSOLE", PunishmentType.TEMP_BAN, reason, TimeUtils.getTime(duration, unit), silent, true);
+            punishment.createPunishment();
+            profile.getBans().add(punishment);
+        } else if (sender instanceof Player player) {
+            punishment = new Punishment(Punishment.getNewID(), profile.getUuid(), player.getUniqueId().toString(), PunishmentType.TEMP_BAN, reason, TimeUtils.getTime(duration, unit), silent, true);
+            punishment.createPunishment();
+            tf = punishment.getTimeLeft();
+            profile.getBans().add(punishment);
+        }
+        profile.setBanned(true);
+        profile.save();
+        if (silent) {
+            JsonObject data = new JsonObject();
+            data.addProperty("offender", target.getName());
+            data.addProperty("staff", sender.getName());
+            bPunishments.getInstance().getRedisManager().write(Payload.STAFF_TEMP_BAN_SENT, data);
+        } else {
+            Bukkit.broadcastMessage(ChatUtils.format(Feedback.GLOBAL_PUNISHMENT_SENT_TEMP_BAN)
+                    .replace("{duration}", tf)
+                    .replace("{offender}", target.getName())
+                    .replace("{staff}", sender.getName()));
+        }
+        if(target.isOnline()) {
+            target.getPlayer().kickPlayer(ChatUtils.format(Feedback.KICK_TEMP_BAN)
+                    .replace("{expire}", tf));
+        }
     }
 }

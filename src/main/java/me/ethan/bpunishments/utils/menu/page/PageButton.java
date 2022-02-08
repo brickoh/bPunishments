@@ -25,11 +25,13 @@ public class PageButton extends Button {
             ItemStack itemStack = new ItemStack(Material.ARROW);
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setDisplayName(mod > 0 ? ChatUtils.format("&aNext Page") : ChatUtils.format("&cPrevious Page"));
+            itemStack.setItemMeta(itemMeta);
             return itemStack;
         } else {
             ItemStack itemStack = new ItemStack(Material.ARROW);
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.setDisplayName(mod > 0 ? ChatUtils.format("&cLast Page") : ChatUtils.format("&aFirst Page"));
+            itemStack.setItemMeta(itemMeta);
             return itemStack;
         }
     }

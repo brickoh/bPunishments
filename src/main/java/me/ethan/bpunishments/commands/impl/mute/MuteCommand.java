@@ -1,4 +1,4 @@
-package me.ethan.bpunishments.commands.impl.ban;
+package me.ethan.bpunishments.commands.impl.mute;
 
 import com.google.gson.JsonObject;
 import me.ethan.bpunishments.bPunishments;
@@ -21,14 +21,14 @@ import org.bukkit.entity.Player;
 import java.util.Objects;
 import java.util.UUID;
 
-public class BanCommand {
+public class MuteCommand {
 
-    @Command(name = "ban", permission = "bpunishments.commands.ban")
+    @Command(name = "mute", permission = "bpunishments.commands.mute")
     public void execute(CommandArgs args) {
         CommandSender sender = args.getSender();
 
         if (args.getArgs().length == 0) {
-            sender.sendMessage(ChatColor.RED + "/ban <player> <reason> [-s]");
+            sender.sendMessage(ChatColor.RED + "/mute <player> <reason> [-s]");
             return;
         }
         UUID uuid = UUIDUtils.getUUID(args.getArgs(0));
@@ -51,30 +51,27 @@ public class BanCommand {
         }
         Punishment punishment;
         if (sender instanceof ConsoleCommandSender) {
-            punishment = new Punishment(Punishment.getNewID(), profile.getUuid(), "CONSOLE", PunishmentType.BAN, reason, 0L, silent, true);
+            punishment = new Punishment(Punishment.getNewID(), profile.getUuid(), "CONSOLE", PunishmentType.MUTE, reason, 0L, silent, true);
             punishment.createPunishment();
-            profile.getBans().add(punishment);
+            profile.getMutes().add(punishment);
         } else if (sender instanceof Player player) {
-            punishment = new Punishment(Punishment.getNewID(), profile.getUuid(), player.getUniqueId().toString(), PunishmentType.BAN, reason, 0L, silent, true);
+            punishment = new Punishment(Punishment.getNewID(), profile.getUuid(), player.getUniqueId().toString(), PunishmentType.MUTE, reason, 0L, silent, true);
             punishment.createPunishment();
-            profile.getBans().add(punishment);
+            profile.getMutes().add(punishment);
         }
-        profile.setBanned(true);
+        profile.setMuted(true);
         profile.save();
         if (silent) {
             JsonObject data = new JsonObject();
             data.addProperty("offender", target.getName());
             data.addProperty("staff", sender.getName());
-            bPunishments.getInstance().getRedisManager().write(Payload.STAFF_BAN_SENT, data);
+            bPunishments.getInstance().getRedisManager().write(Payload.STAFF_MUTE_SENT, data);
         } else {
-            Bukkit.broadcastMessage(ChatUtils.format(Feedback.GLOBAL_PUNISHMENT_SENT_BAN)
+            Bukkit.broadcastMessage(ChatUtils.format(Feedback.GLOBAL_PUNISHMENT_SENT_MUTE)
                     .replace("{offender}", target.getName())
                     .replace("{staff}", sender.getName()));
         }
-
-        if(target.isOnline()) {
-            target.getPlayer().kickPlayer(ChatUtils.format(Feedback.KICK_BAN));
-        }
-
     }
+
+
 }

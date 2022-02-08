@@ -4,7 +4,3 @@ main: me.ethan.bpunishments.bPunishments
 api-version: 1.17
 authors: [ brickoh ]
 commands:
-  ban:
-  tban:
-  unban:
-  history:

@@ -1,0 +1,22 @@
+package me.ethan.bpunishments.database.redis.impl;
+
+public enum Payload {
+
+    STAFF_BAN_SENT,
+    STAFF_TEMP_BAN_SENT,
+    STAFF_MUTE_SENT,
+    STAFF_TEMP_MUTE_SENT,
+    STAFF_WARN_SENT,
+    STAFF_BLACKLIST_SENT,
+    STAFF_KICK_SENT,
+
+    STAFF_REVOKED_BAN,
+    STAFF_REVOKED_MUTE,
+    STAFF_REVOKED_BLACKLIST,
+    STAFF_REVOKED_WARN,
+
+
+    PLAYER_JOIN_ATTEMPT,
+    PLAYER_TALK_ATTEMPT
+
+}

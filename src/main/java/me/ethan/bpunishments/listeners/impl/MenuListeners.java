@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.Map;
 
-public class MenuListener implements Listener {
+public class MenuListeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent event) {

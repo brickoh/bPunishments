@@ -1,4 +1,4 @@
-package me.ethan.bpunishments.database;
+package me.ethan.bpunishments.database.mongo;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;

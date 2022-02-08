@@ -79,6 +79,12 @@ public class Profile {
                     document.getBoolean("silent"),
                     document.getBoolean("active"));
 
+            if(!punishment.isActive()) {
+                punishment.setRemoveReason(document.getString("removed_reason"));
+                punishment.setRemovedAt(document.getLong("removed_at"));
+            }
+            punishment.setExecutedAt(document.getLong("executed_at"));
+
             switch (punishment.getPunishmentType()) {
                 case TEMP_BAN, BAN -> bans.add(punishment);
                 case TEMP_MUTE, MUTE -> mutes.add(punishment);

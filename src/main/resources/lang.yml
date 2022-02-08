@@ -20,7 +20,7 @@ staff:
 
 global:
   punishment-sent:
-    ban: "&8&m---------------------\n&f{offender} &7has been &fbanned &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
+    ban: "&8&m---------------------\n&f{offender} &7has been &fbanned &7by &f{staff}&7!\n&8&m---------------------"
     temp-ban: "&8&m---------------------\n&f{offender} &7has been &ftemp banned &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
     warn: "&8&m---------------------\n&f{offender} &7has been &fwarned &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
     mute: "&8&m---------------------\n&f{offender} &7has been &fmuted &7by &f{staff}&7!\n&7Duration: &f{duration}\n&8&m---------------------"
