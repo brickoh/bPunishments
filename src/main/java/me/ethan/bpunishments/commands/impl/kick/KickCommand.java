@@ -58,7 +58,7 @@ public class KickCommand {
             punishment.createPunishment();
             profile.getKicks().add(punishment);
         }
-        
+
         JsonObject data = new JsonObject();
         data.addProperty("offender", target.getName());
         data.addProperty("staff", sender.getName());
